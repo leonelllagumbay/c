@@ -144,7 +144,7 @@
 	    <!--- Begin route which page to run --->
    		<!--- Mostly an ajax request is made here --->
 	    <cfif Not IsDefined("URL.profile")>
-   			<cfoutput><p style="font-family: Arial;">Loading.......</p></cfoutput>
+   			<cfoutput><p style="font-family: Arial; font-size: .8em;">Loading.......</p></cfoutput>
 	    </cfif>
 		<!--- <cflogin>
 			<cfif IsDefined("form.password") OR IsDefined("form.newpassword")>

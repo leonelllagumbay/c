@@ -13,9 +13,6 @@ Ext.define('iBOSe.view.reminder.src.view.Month', {
     
     requires: [
         'Ext.XTemplate'
-        //'iBOSe.view.reminder.src.template.Month',
-        //'iBOSe.view.reminder.src.util.WeekEventRenderer',
-        //'iBOSe.view.reminder.src.view.MonthDayDetail'
     ],
     
     /**
@@ -258,7 +255,7 @@ Ext.define('iBOSe.view.reminder.src.view.Month', {
             _elId: selector + '-' + evt._weekIndex,
             _isRecurring: evt.Recurrence && evt.Recurrence != '',
             _isReminder: evt[M.Reminder.name] && evt[M.Reminder.name] != '',
-            Title: (evt[M.IsAllDay.name] ? '' : Ext.Date.format(evt[M.StartDate.name], 'g:ia ')) + (!title || title.length == 0 ? '(No title)' : title),
+            Title: (evt[M.IsAllDay.name] ? '' : Ext.Date.format(new Date(evt[M.StartDate.name]), 'g:ia ')) + (!title || title.length == 0 ? '(No title)' : title),
             _operaLT11: this.operaLT11 ? 'ext-operaLT11' : ''
         },
         evt);

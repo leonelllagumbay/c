@@ -9,6 +9,7 @@
 <cfdump var="#retArray#">
 <cfdump var="#qryMsg#"> --->
 
-<cfoutput>#Hash("leonell", "SHA-512")#</cfoutput>
+<!--- <cfoutput>#Hash("leonell", "SHA-512")#</cfoutput>
 <cfoutput>#Ucase("18dbe923e5ccdaf1d0fa082a3e7ece05465dd3f09a8997afd00b0401cf4d5467d55642567311abede0ec7211da4e7a5e77ec61e3a76d452216ae021366d765b5")#</cfoutput>
-<cfdump var="#session#">
+<cfdump var="#session#"> --->
+<cfdump var="#CGI#">

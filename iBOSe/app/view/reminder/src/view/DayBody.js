@@ -136,8 +136,8 @@ Ext.define('iBOSe.view.reminder.src.view.DayBody', {
     // private
     onEventResize: function(rec, data) {
         var D = iBOSe.view.reminder.src.util.Date,
-        start = iBOSe.view.reminder.src.data.EventMappings.StartDate.name,
-        end = iBOSe.view.reminder.src.data.EventMappings.EndDate.name;
+        start = new Date(iBOSe.view.reminder.src.data.EventMappings.StartDate.name),
+        end = new Date(iBOSe.view.reminder.src.data.EventMappings.EndDate.name);
 
         if (D.compare(rec.data[start], data.StartDate) === 0 &&
         D.compare(rec.data[end], data.EndDate) === 0) {
@@ -250,7 +250,7 @@ Ext.define('iBOSe.view.reminder.src.view.DayBody', {
         data._isRecurring = evt.Recurrence && evt.Recurrence != '';
         data._isReminder = evt[M.Reminder.name] && evt[M.Reminder.name] != '';
         var title = evt[M.Title.name];
-        data.Title = (evt[M.IsAllDay.name] ? '': Ext.Date.format(evt[M.StartDate.name], 'g:ia ')) + (!title || title.length == 0 ? '(No title)': title);
+        data.Title = (evt[M.IsAllDay.name] ? '': Ext.Date.format(new Date(evt[M.StartDate.name]), 'g:ia ')) + (!title || title.length == 0 ? '(No title)': title);
 
         return Ext.applyIf(data, evt);
     },
@@ -258,8 +258,8 @@ Ext.define('iBOSe.view.reminder.src.view.DayBody', {
     // private
     getTemplateEventBox: function(evt) {
         var heightFactor = 0.7,
-            start = evt[iBOSe.view.reminder.src.data.EventMappings.StartDate.name],
-            end = evt[iBOSe.view.reminder.src.data.EventMappings.EndDate.name],
+            start = new Date(evt[iBOSe.view.reminder.src.data.EventMappings.StartDate.name]),
+            end = new Date(evt[iBOSe.view.reminder.src.data.EventMappings.EndDate.name]),
             startMins = start.getHours() * 60 + start.getMinutes(),
             endMins = end.getHours() * 60 + end.getMinutes(),
             diffMins = endMins - startMins;

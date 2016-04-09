@@ -292,46 +292,4 @@ Ext.define('iBOSe.view.reminder.src.App', {
             Ext.getBody().addCls('x-win');
         }
     }
-},
-function() {
-    /*
-     * A few Ext overrides needed to work around issues in the calendar
-     */
-    
-    Ext.form.Basic.override({
-        reset: function() {
-            var me = this;
-            // This causes field events to be ignored. This is a problem for the
-            // DateTimeField since it relies on handling the all-day checkbox state
-            // changes to refresh its layout. In general, this batching is really not
-            // needed -- it was an artifact of pre-4.0 performance issues and can be removed.
-            //me.batchLayouts(function() {
-                me.getFields().each(function(f) {
-                    f.reset();
-                });
-            //});
-            return me;
-        }
-    });
-    
-    // Currently MemoryProxy really only functions for read-only data. Since we want
-    // to simulate CRUD transactions we have to at the very least allow them to be
-    // marked as completed and successful, otherwise they will never filter back to the
-    // UI components correctly.
-    Ext.data.MemoryProxy.override({
-        updateOperation: function(operation, callback, scope) {
-            operation.setCompleted();
-            operation.setSuccessful();
-            Ext.callback(callback, scope || this, [operation]);
-        },
-        create: function() {
-            this.updateOperation.apply(this, arguments);
-        },
-        update: function() {
-            this.updateOperation.apply(this, arguments);
-        },
-        destroy: function() {
-            this.updateOperation.apply(this, arguments);
-        }
-    });
 });

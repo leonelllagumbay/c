@@ -11,7 +11,6 @@ Ext.define('iBOSe.view.reminder.src.data.MemoryCalendarStore', {
         'Ext.data.reader.Json',
         'Ext.data.writer.Json',
         'iBOSe.view.reminder.src.data.CalendarModel'
-        //'iBOSe.view.reminder.src.data.CalendarMappings'
     ],
     
     proxy: {

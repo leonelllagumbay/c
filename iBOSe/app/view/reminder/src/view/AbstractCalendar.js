@@ -310,9 +310,9 @@ Ext.define('iBOSe.view.reminder.src.view.AbstractCalendar', {
             for (d = 0; d < this.dayCount; d++) {
                 if (evtsInView.getCount() > 0) {
                     var evts = evtsInView.filterBy(function(rec) {
-                        var startDt = Ext.Date.clearTime(rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name], true),
+                        var startDt = Ext.Date.clearTime(new Date(rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name]), true),
                             startsOnDate = dt.getTime() == startDt.getTime(),
-                            spansFromPrevView = (w == 0 && d == 0 && (dt > rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name]));
+                            spansFromPrevView = (w == 0 && d == 0 && (dt > new Date(rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name])));
                             
                         return startsOnDate || spansFromPrevView;
                     },
@@ -336,10 +336,10 @@ Ext.define('iBOSe.view.reminder.src.view.AbstractCalendar', {
         evts.each(function(evt) {
             var M = iBOSe.view.reminder.src.data.EventMappings,
             days = iBOSe.view.reminder.src.util.Date.diffDays(
-            		iBOSe.view.reminder.src.util.Date.max(me.viewStart, evt.data[M.StartDate.name]),
-            		iBOSe.view.reminder.src.util.Date.min(me.viewEnd, evt.data[M.EndDate.name])) + 1;
+            		iBOSe.view.reminder.src.util.Date.max(me.viewStart, new Date(evt.data[M.StartDate.name])),
+            		iBOSe.view.reminder.src.util.Date.min(me.viewEnd, new Date(evt.data[M.EndDate.name]))) + 1;
 
-            if (days > 1 || iBOSe.view.reminder.src.util.Date.diffDays(evt.data[M.StartDate.name], evt.data[M.EndDate.name]) > 1) {
+            if (days > 1 || iBOSe.view.reminder.src.util.Date.diffDays(new Date(evt.data[M.StartDate.name]), new Date(evt.data[M.EndDate.name])) > 1) {
                 me.prepareEventGridSpans(evt, me.eventGrid, w, d, days);
                 me.prepareEventGridSpans(evt, me.allDayGrid, w, d, days, true);
             } else {
@@ -454,13 +454,14 @@ Ext.define('iBOSe.view.reminder.src.view.AbstractCalendar', {
 
     // private
     onEventDrop: function(rec, dt) {
-        if (iBOSe.view.reminder.src.util.Date.compare(rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name], dt) === 0) {
+        if (iBOSe.view.reminder.src.util.Date.compare(new Date(rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name]), dt) === 0) {
             // no changes
             return;
         }
-        var diff = dt.getTime() - rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name].getTime();
-        rec.set(iBOSe.view.reminder.src.data.EventMappings.StartDate.name, dt);
-        rec.set(iBOSe.view.reminder.src.data.EventMappings.EndDate.name, iBOSe.view.reminder.src.util.Date.add(rec.data[iBOSe.view.reminder.src.data.EventMappings.EndDate.name], {millis: diff}));
+        var sdt = new Date(rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name]);
+        var diff = dt.getTime() - sdt.getTime();
+        rec.set(new Date(iBOSe.view.reminder.src.data.EventMappings.StartDate.name), dt);
+        rec.set(new Date(iBOSe.view.reminder.src.data.EventMappings.EndDate.name), iBOSe.view.reminder.src.util.Date.add(new Date(rec.data[iBOSe.view.reminder.src.data.EventMappings.EndDate.name]), {millis: diff}));
 
         this.fireEvent('eventmove', this, rec);
     },
@@ -662,10 +663,12 @@ Ext.define('iBOSe.view.reminder.src.view.AbstractCalendar', {
             data = evt.data || evt,
             start = this.viewStart.getTime(),
             end = this.viewEnd.getTime(),
-            evStart = data[M.StartDate.name].getTime(),
-            evEnd = data[M.EndDate.name].getTime();
-            evEnd = iBOSe.view.reminder.src.util.Date.add(data[M.EndDate.name], {seconds: -1}).getTime();
-
+            evStart = new Date(data[M.StartDate.name]),
+            evEnd = new Date(data[M.EndDate.name]);
+        	evEnd = evEnd.getTime();
+            evEnd = iBOSe.view.reminder.src.util.Date.add(new Date(data[M.EndDate.name]), {seconds: -1});
+            evEnd = evEnd.getTime();
+            evStart = evStart.getTime();
         return this.rangesOverlap(start, end, evStart, evEnd);
     },
     
@@ -682,10 +685,15 @@ Ext.define('iBOSe.view.reminder.src.view.AbstractCalendar', {
         var ev1 = evt1.data ? evt1.data: evt1,
         ev2 = evt2.data ? evt2.data: evt2,
         M = iBOSe.view.reminder.src.data.EventMappings,
-        start1 = ev1[M.StartDate.name].getTime(),
-        end1 = iBOSe.view.reminder.src.util.Date.add(ev1[M.EndDate.name], {seconds: -1}).getTime(),
-        start2 = ev2[M.StartDate.name].getTime(),
-        end2 = iBOSe.view.reminder.src.util.Date.add(ev2[M.EndDate.name], {seconds: -1}).getTime();
+        start1 = new Date(ev1[M.StartDate.name]),
+        end1 = iBOSe.view.reminder.src.util.Date.add(new Date(ev1[M.EndDate.name]), {seconds: -1}),
+        start2 = new Date(ev2[M.StartDate.name]),
+        end2 = iBOSe.view.reminder.src.util.Date.add(new Date(ev2[M.EndDate.name]), {seconds: -1});
+        
+        start1 = start1.getTime();
+        end1 = end1.getTime();
+        start2 = start2.getTime();
+        end2 = end2.getTime();
 
         if (end1 < start1) {
             end1 = start1;
@@ -803,36 +811,45 @@ Ext.define('iBOSe.view.reminder.src.view.AbstractCalendar', {
             else if (b[M.IsAllDay.name]) {
                 return 1;
             }
+            
+            var dsd = new Date(a[M.StartDate.name]);
+        	var dsb = new Date(b[M.StartDate.name]);
+        	var bend = new Date(b[M.EndDate.name]);
+        	var aend = new Date(a[M.EndDate.name]);
+            
             if (this.spansHavePriority) {
                 // This logic always weights span events higher than non-span events
                 // (at the possible expense of start time order). This seems to
                 // be the approach used by Google calendar and can lead to a more
                 // visually appealing layout in complex cases, but event order is
                 // not guaranteed to be consistent.
+            	
                 var diff = iBOSe.view.reminder.src.util.Date.diffDays;
-                if (diff(a[M.StartDate.name], a[M.EndDate.name]) > 0) {
-                    if (diff(b[M.StartDate.name], b[M.EndDate.name]) > 0) {
+                if (diff(new Date(a[M.StartDate.name]), new Date(a[M.EndDate.name])) > 0) {
+                    if (diff(new Date(b[M.StartDate.name]), new Date(b[M.EndDate.name])) > 0) {
                         // Both events are multi-day
-                        if (a[M.StartDate.name].getTime() == b[M.StartDate.name].getTime()) {
+                    	
+                        if (dsd.getTime() == dsb.getTime()) {
                             // If both events start at the same time, sort the one
                             // that ends later (potentially longer span bar) first
-                            return b[M.EndDate.name].getTime() - a[M.EndDate.name].getTime();
+                        	
+                            return bend.getTime() - aend.getTime();
                         }
-                        return a[M.StartDate.name].getTime() - b[M.StartDate.name].getTime();
+                        return dsd.getTime() - dsb.getTime();
                     }
                     return - 1;
                 }
-                else if (diff(b[M.StartDate.name], b[M.EndDate.name]) > 0) {
+                else if (diff(dsb, bend) > 0) {
                     return 1;
                 }
-                return a[M.StartDate.name].getTime() - b[M.StartDate.name].getTime();
+                return dsd.getTime() - dsb.getTime();
             }
             else {
                 // Doing this allows span and non-span events to intermingle but
                 // remain sorted sequentially by start time. This seems more proper
                 // but can make for a less visually-compact layout when there are
                 // many such events mixed together closely on the calendar.
-                return a[M.StartDate.name].getTime() - b[M.StartDate.name].getTime();
+                return dsd.getTime() - dsb.getTime();
             }
         }, this));
     },

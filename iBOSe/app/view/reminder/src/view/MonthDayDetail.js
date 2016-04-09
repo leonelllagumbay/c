@@ -10,8 +10,6 @@ Ext.define('iBOSe.view.reminder.src.view.MonthDayDetail', {
 
     requires: [
         'Ext.XTemplate'
-        //'iBOSe.view.reminder.src.util.Date',
-        //'iBOSe.view.reminder.src.view.AbstractCalendar'
     ],
 
     afterRender: function() {
@@ -60,12 +58,12 @@ Ext.define('iBOSe.view.reminder.src.view.MonthDayDetail', {
 
         evts = this.store.queryBy(function(rec) {
             var thisDt = Ext.Date.clearTime(this.date, true).getTime(),
-                recStart = Ext.Date.clearTime(rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name], true).getTime(),
+                recStart = Ext.Date.clearTime(new Date(rec.data[iBOSe.view.reminder.src.data.EventMappings.StartDate.name]), true).getTime(),
                 startsOnDate = (thisDt == recStart),
                 spansDate = false;
 
             if (!startsOnDate) {
-                var recEnd = Ext.Date.clearTime(rec.data[iBOSe.view.reminder.src.data.EventMappings.EndDate.name], true).getTime();
+                var recEnd = Ext.Date.clearTime(new Date(rec.data[iBOSe.view.reminder.src.data.EventMappings.EndDate.name]), true).getTime();
                 spansDate = recStart < thisDt && recEnd >= thisDt;
             }
             return startsOnDate || spansDate;
@@ -76,9 +74,9 @@ Ext.define('iBOSe.view.reminder.src.view.MonthDayDetail', {
             var item = evt.data,
             M = iBOSe.view.reminder.src.data.EventMappings;
 
-            item._renderAsAllDay = item[M.IsAllDay.name] || iBOSe.view.reminder.src.util.Date.diffDays(item[M.StartDate.name], item[M.EndDate.name]) > 0;
-            item.spanLeft = iBOSe.view.reminder.src.util.Date.diffDays(item[M.StartDate.name], this.date) > 0;
-            item.spanRight = iBOSe.view.reminder.src.util.Date.diffDays(this.date, item[M.EndDate.name]) > 0;
+            item._renderAsAllDay = item[M.IsAllDay.name] || iBOSe.view.reminder.src.util.Date.diffDays(new Date(item[M.StartDate.name]), new Date(item[M.EndDate.name])) > 0;
+            item.spanLeft = iBOSe.view.reminder.src.util.Date.diffDays(new Date(item[M.StartDate.name]), this.date) > 0;
+            item.spanRight = iBOSe.view.reminder.src.util.Date.diffDays(this.date, new Date(item[M.EndDate.name])) > 0;
             item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth':
             'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright': ''));
 

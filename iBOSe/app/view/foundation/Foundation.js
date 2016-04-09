@@ -29,6 +29,8 @@ Ext.define("iBOSe.view.foundation.Foundation",{
     rootVisible: true,
 
     padding: '0 0 20 0',
+    
+    
 
     columns: [{
         xtype: 'treecolumn', //this is so we know which column will show the tree

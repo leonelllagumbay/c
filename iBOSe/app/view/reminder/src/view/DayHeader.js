@@ -11,10 +11,6 @@
 Ext.define('iBOSe.view.reminder.src.view.DayHeader', {
     extend: 'iBOSe.view.reminder.src.view.Month',
     alias: 'widget.dayheaderview',
-
-    requires: [
-        //'iBOSe.view.reminder.src.template.DayHeader'
-    ],
     
     // private configs
     weekCount: 1,

@@ -97,8 +97,12 @@ Ext.define('iBOSe.view.reminder.src.util.WeekEventRenderer', {
                                     var item = evt.data || evt.event.data;
                                     item._weekIndex = w;
                                     item._renderAsAllDay = item[iBOSe.view.reminder.src.data.EventMappings.IsAllDay.name] || evt.isSpanStart;
-                                    item.spanLeft = item[iBOSe.view.reminder.src.data.EventMappings.StartDate.name].getTime() < startOfWeek.getTime();
-                                    item.spanRight = item[iBOSe.view.reminder.src.data.EventMappings.EndDate.name].getTime() > endOfWeek.getTime();
+                                    
+                                    var stm = new Date(item[iBOSe.view.reminder.src.data.EventMappings.StartDate.name]);
+                                    var etm = new Date(item[iBOSe.view.reminder.src.data.EventMappings.EndDate.name]);
+                                    
+                                    item.spanLeft = stm.getTime() < startOfWeek.getTime();
+                                    item.spanRight = etm.getTime() > endOfWeek.getTime();
                                     item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth':
                                     'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright': ''));
 
@@ -108,7 +112,7 @@ Ext.define('iBOSe.view.reminder.src.util.WeekEventRenderer', {
                                         cls: 'ext-cal-ev',
                                         cn: eventTpl.apply(o.templateDataFn(item))
                                     };
-                                    var diff = iBOSe.view.reminder.src.util.Date.diffDays(dt, item[iBOSe.view.reminder.src.data.EventMappings.EndDate.name]) + 1,
+                                    var diff = iBOSe.view.reminder.src.util.Date.diffDays(dt, new Date(item[iBOSe.view.reminder.src.data.EventMappings.EndDate.name])) + 1,
                                         cspan = Math.min(diff, dayCount - d);
 
                                     if (cspan > 1) {
